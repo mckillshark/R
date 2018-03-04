@@ -1,0 +1,89 @@
+#This is code for basic stats in R
+#Stats is run on Chronic Stress excel sheet
+#First import data file and create new R script
+
+#Determine basic statistics- here are some available functions and packages that can do this:
+
+summary(stress)
+
+#sapply function
+
+sapply(stress, sd) #or input any other parameter, like mean, median, etc
+
+#Pastecs package 
+
+install.packages("pastecs")
+library(pastecs)
+stat.desc(stress)
+
+#Psych package
+
+install.packages("psych")
+library(pastecs)
+describe(stress)
+
+#Counting frequency for categorical variables
+
+count(stress$Sex) #$ symbol singles out a variable in your data frame. Here, it means data from stress, only Sex
+
+#Correlation between Chronic stress and BDI scores
+# Need to use cor(x, y) format
+#First define x and y
+
+x <- stress$'Chronic Stress'
+y <- stress$'BDI score'
+
+#Then call the cor(x, y) command
+
+cor(x, y)
+
+#Now check that the correlation is significant:
+
+cor.test(x, y)
+
+#Could be cool to make a scatterplot of that relationship, and add a fit line for shits and gigs
+
+plot(x, y)
+abline(lm(x, y~x), col="red")
+
+#Now regress these fuckers
+
+fit <- lm(y~x, data = stress) #defines the model
+summary(fit) #provides the results
+
+#Conclusion: chronic stress significantly predicts BDI scores, such that as stress goes up, so does BDI
+
+#Maybe gender is a confounder? Run t-tests to see if stress and BDI is different across gender
+
+#T-test between sex and stress
+stress$Sex.f <- factor(stress$Sex, labels = c("male", "female)) #turns Sex into categorical variable
+x <- stress$Sex.f
+y <- stress$'Chronic Stress'
+t.test(y~x)
+
+#T-test between sex and BDI
+x <- stress$Sex.f
+y <- stress$'BDI score'
+t.test(y~x)
+
+# Categorical variable transformation extracted from sofiamdanna's code
+
+#Even though in the data there is no evidence that could suggest gender being a confounder
+#Here is how you could analyze covariance anyways:
+
+xx <- stress$Sex.f
+x <- stress$'Chronic Stress'
+y <- stress$'BDI score'
+fit2 <- lm(y~x + xx, data = stress) #defines a new model where gender is added as a covariate (use + sign)
+summary(fit2)
+
+#Then you can compare the two models to see if they are significantly different
+
+anova(fit, fit2)
+
+
+
+
+
+
+
