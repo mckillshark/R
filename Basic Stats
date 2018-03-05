@@ -19,8 +19,12 @@ stat.desc(stress)
 #Psych package
 
 install.packages("psych")
-library(pastecs)
+library(psych)
 describe(stress)
+
+#If you want to split your descriptives based on group (using the psych package)
+
+describe.by(stress, stress$Sex.f)
 
 #Counting frequency for categorical variables
 
@@ -56,7 +60,7 @@ summary(fit) #provides the results
 #Maybe gender is a confounder? Run t-tests to see if stress and BDI is different across gender
 
 #T-test between sex and stress
-stress$Sex.f <- factor(stress$Sex, labels = c("male", "female)) #turns Sex into categorical variable
+stress$Sex.f <- factor(stress$Sex, labels = c("male", "female")) #turns Sex into categorical variable
 x <- stress$Sex.f
 y <- stress$'Chronic Stress'
 t.test(y~x)
