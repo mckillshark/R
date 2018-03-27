@@ -27,13 +27,35 @@ NewData <- NewData[-row#, ]
 TCI0316CAYRPOST <-TCI0316CAYRPOST[-6, ]
 TCI0316CAYRPOST <-TCI0316CAYRPOST[-1, ]
 
-#Now ready to run some frequencies using count function.
-#Here is the bare code (although R will indicates what to fill in)
+#Now determine frequencies by creating a frequency table.
 
-count_(NewData, NewData$Variable1, wt = NULL, sort = FALSE)
+#Here is the bare code:
 
-#Here is the real code:
+NEWtable <- table(NewData$variable1)
+NEWtable
 
-count_(TCI0316CAYRPOST, TCI0316CAYRPOST$CAR, wt = NULL, sort = FALSE)
+#Code example:
 
-#BOOM.
+CAYR_DIStable <- table(PostCAYR_only_data_new$CAYR_DIS)
+CAYR_DIStable
+
+#Make a table for each variable that needs frequencies computed.
+
+#Next we need descriptive stats to determine the average drop out month. Make sure psych package is loaded
+#Here is the bare code:
+
+describe.by(NewData$variable2)
+
+#Need to do the same analysis for the time 1 data, so input same 'select' function except this time filter for pre only
+
+#Need to remove certain rows of data (not sure if I can combine this code, but for now I did it separately):
+
+TCI0316CAYRPRE <-TCI0316CAYRPRE[-1, ]
+TCI0316CAYRPRE <-TCI0316CAYRPRE[-2, ]
+TCI0316CAYRPRE <-TCI0316CAYRPRE[-3, ]
+
+#Next run the exact same codes as before but for the PRE data frame
+
+
+
+
