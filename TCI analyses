@@ -1,0 +1,39 @@
+#Basic analyses for TCI data
+#Install packages to perform data organization and frequencies tasks
+install.packages("plyr")
+library(plyr)
+
+install.packages("dplyr")
+library(dplyr)
+
+#dplyr package contains the select and filter tools we need to organize and split the file.
+#need to split the file so that we only have post data, and only have CAR == 1 data
+#First assign a new data frame name, then set the select arguments
+#bare code should look like this:
+
+NewData <- select(filter(OldData, GroupVar1 == 2, GroupVar2 == 1), c(variable1,variable2,variable3,...))
+
+#Here is the code example:
+
+TCI0316CAYRPOST <- select(filter(TCI0316, PREPOSTref == 2, CAR == 1), c(DBID, referid, PREPOSTref, CAR, CAR_Screen, CAR_CRIT))
+
+#A new data frame will be created in R (found on the right under 'Global Environment'). You can open that data frame to make sure it looks right
+#There are two participants that are excluded from analyses. To remove them, use this bare code:
+
+NewData <- NewData[-row#, ]
+
+#Here is the real code:
+
+TCI0316CAYRPOST <-TCI0316CAYRPOST[-6, ]
+TCI0316CAYRPOST <-TCI0316CAYRPOST[-1, ]
+
+#Now ready to run some frequencies using count function.
+#Here is the bare code (although R will indicates what to fill in)
+
+count_(NewData, NewData$Variable1, wt = NULL, sort = FALSE)
+
+#Here is the real code:
+
+count_(TCI0316CAYRPOST, TCI0316CAYRPOST$CAR, wt = NULL, sort = FALSE)
+
+#BOOM.
