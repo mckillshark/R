@@ -88,6 +88,11 @@ anova(fit, fit2)
 #Can run the same stuff on age as the confounder as well, except I did correlations instead of t-tests
 
 
+#To delete variable in R:
+
+Data$Var1 <- NULL
+
+helpful link: https://datascienceplus.com/create-new-variable-in-r/
 
 
 
