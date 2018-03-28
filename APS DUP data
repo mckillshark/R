@@ -1,0 +1,17 @@
+# Analysis of the APS DUP data
+# This was originally done in SPSS, but because SPSS is Satan's grandchild, I am doing the analysis in R
+# Data cleaning was done already
+
+# Install packages
+
+install.packages("plyr")
+library(plyr)
+
+install.packages("dplyr")
+library(dplyr)
+
+# Data organization- keep only variables that are needed
+
+APSDUPnew <- select(filter(APSDUP0328, ), c(pin,APSyn,dup_help_dup_ref,dup_en_m,prodrome,dui,DUPtotal))
+
+
