@@ -97,3 +97,122 @@ APSDUPnew$Log_prodrome <- as.numeric(APSDUPnew$Log_prodrome)
 #run summaries to make sure this worked.
 
 summary(APSDUPnew$Log_duphelp)
+
+##### Descriptive statistics ----
+
+# Number of participants per group
+
+APSfreqtable <- table(APSDUPnew$APSyn)
+APSfreqtable
+
+# Mean and SDS per group
+
+describeBy(APSDUPnew, APSDUPnew$APSyn)
+
+##### Independent samples t-test--------
+
+#Make sure APSyn is categorical
+
+APSDUPnew$APSyn <- factor(APSDUPnew$APSyn, labels = c("yes", "no"))
+x <- APSDUPnew$APSyn
+y <- APSDUPnew$Log_dui
+t.test(y~x)
+
+######## Results ###########
+
+> x <- APSDUPnew$APSyn
+Warning message:
+Unknown or uninitialised column: 't.test'. 
+> y <- APSDUPnew$Log_duphelp
+> APSDUPnew$APSyn <- factor(APSDUPnew$APSyn, labels = c("yes", "no"))
+> x <- APSDUPnew$APSyn
+> y <- APSDUPnew$Log_duphelp
+> t.test(y~x)
+
+	Welch Two Sample t-test
+
+data:  y by x
+t = -2.8546, df = 281.12, p-value = 0.00463
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.39655568 -0.07286167
+sample estimates:
+mean in group yes  mean in group no 
+        0.6096805         0.8443892 
+
+> y <- APSDUPnew$Log_dupref
+Warning message:
+Unknown or uninitialised column: 't.test'. 
+> t.test(y~x)
+
+	Welch Two Sample t-test
+
+data:  y by x
+t = -0.20833, df = 236.25, p-value = 0.8352
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.210506  0.170243
+sample estimates:
+mean in group yes  mean in group no 
+        0.3423829         0.3625144 
+
+> y <- APSDUPnew$Log_dup_en_m
+Warning message:
+Unknown or uninitialised column: 't.test'. 
+> t.test(y~x)
+
+	Welch Two Sample t-test
+
+data:  y by x
+t = 0.793, df = 136.28, p-value = 0.4292
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.09262147  0.21663521
+sample estimates:
+mean in group yes  mean in group no 
+        0.3268527         0.2648458 
+
+> y <- APSDUPnew$Log_DUPtotal
+Warning message:
+Unknown or uninitialised column: 't.test'. 
+> t.test(y~x)
+
+	Welch Two Sample t-test
+
+data:  y by x
+t = -1.7664, df = 253.39, p-value = 0.07853
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.30271263  0.01644504
+sample estimates:
+mean in group yes  mean in group no 
+         1.016905          1.160039 
+
+> y <- APSDUPnew$Log_prodrome
+> t.test(y~x)
+
+	Welch Two Sample t-test
+
+data:  y by x
+t = -3.0942, df = 232.55, p-value = 0.002215
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.4670902 -0.1036622
+sample estimates:
+mean in group yes  mean in group no 
+         1.209174          1.494550 
+
+> y <- APSDUPnew$Log_dui
+> t.test(y~x)
+
+	Welch Two Sample t-test
+
+data:  y by x
+t = -2.3179, df = 213.39, p-value = 0.0214
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.31482721 -0.02545493
+sample estimates:
+mean in group yes  mean in group no 
+         2.088782          2.258924 
+
