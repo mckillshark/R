@@ -94,6 +94,11 @@ Data$Var1 <- NULL
 
 helpful link: https://datascienceplus.com/create-new-variable-in-r/
 
+#To replace values:
+
+Data$Var1 <- gsub("string", "replacement", Data$Var1)
+
+
 
 
 
