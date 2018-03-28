@@ -98,6 +98,15 @@ helpful link: https://datascienceplus.com/create-new-variable-in-r/
 
 Data$Var1 <- gsub("string", "replacement", Data$Var1)
 
+#Then change value to numeric:
+#R will treat the replacement as a string, and therefore will treat the whole variable as a string. To check run summary on the variable
+
+APSDUPnew$Log_duphelp <- as.numeric(APSDUPnew$Log_duphelp)
+
+## Note: if you want to create a new variable and have it be inputted into your database, link the new variable to the data frame:
+
+Data$NewVariable <- 
+
 
 
 
