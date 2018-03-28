@@ -107,7 +107,9 @@ APSDUPnew$Log_duphelp <- as.numeric(APSDUPnew$Log_duphelp)
 
 Data$NewVariable <- 
 
+helpful link for non-parametric tests:
 
+https://www.statmethods.net/stats/nonparametric.html
 
 
 
