@@ -14,4 +14,86 @@ library(dplyr)
 
 APSDUPnew <- select(filter(APSDUP0328), c(pin,APSyn,dup_help_dup_ref,dup_en_m,prodrome,dui,DUPtotal))
 
+### Plotting data to check normalcy -----
 
+# Full data
+
+boxplot(APSDUPnew$dup_help)
+boxplot(APSDUPnew$dup_ref)
+boxplot(APSDUPnew$dup_en_m)
+boxplot(APSDUPnew$prodrome)
+boxplot(APSDUPnew$dui)
+boxplot(APSDUPnew$DUPtotal)
+
+# APS = 1
+
+APSy <- select(filter(APSDUPnew, APSyn == 1), c(pin,APSyn,dup_help,dup_ref,dup_en_m,prodrome,dui,DUPtotal))
+
+boxplot(APSy$dup_help)
+boxplot(APSy$dup_ref)
+boxplot(APSy$dup_en_m)
+boxplot(APSy$prodrome)
+boxplot(APSy$dui)
+boxplot(APSy$DUPtotal)
+
+#APS = 0
+
+APSn <- select(filter(APSDUPnew, APSyn == 0), c(pin,APSyn,dup_help,dup_ref,dup_en_m,prodrome,dui,DUPtotal))
+
+boxplot(APSn$dup_help)
+boxplot(APSn$dup_ref)
+boxplot(APSn$dup_en_m)
+boxplot(APSn$prodrome)
+boxplot(APSn$dui)
+boxplot(APSn$DUPtotal)
+
+#Surprise surprise, everything is skewed as fuck
+
+#### Log transformation of DUP variables ----
+#NOTE: NA means that pre-existing error (blank), NaN means an error produced due to the formula applied
+
+
+
+APSDUPnew$Log_duphelp <- log10(APSDUPnew$dup_help)
+
+APSDUPnew$Log_dupref <- log10(APSDUPnew$dup_ref)
+
+APSDUPnew$Log_dup_en_m <- log10(APSDUPnew$dup_en_m)
+
+APSDUPnew$Log_DUPtotal <- log10(APSDUPnew$DUPtotal)
+
+APSDUPnew$Log_prodrome <- log10(APSDUPnew$prodrome)
+
+APSDUPnew$Log_dui <- log10(APSDUPnew$dui)
+
+#replace strings to 0, or blank.
+
+APSDUPnew$Log_duphelp <- gsub("-Inf", 0, APSDUPnew$Log_duphelp)
+
+APSDUPnew$Log_dupref <- gsub("-Inf", 0, APSDUPnew$Log_dupref)
+APSDUPnew$Log_dupref <- gsub("NaN", "", APSDUPnew$Log_dupref)
+
+APSDUPnew$Log_dup_en_m <- gsub("-Inf", 0, APSDUPnew$Log_dup_en_m)
+APSDUPnew$Log_dup_en_m <- gsub("NaN", "", APSDUPnew$Log_dup_en_m)
+
+APSDUPnew$Log_DUPtotal <- gsub("-Inf", 0, APSDUPnew$Log_DUPtotal)
+APSDUPnew$Log_DUPtotal <- gsub("NaN", "", APSDUPnew$Log_DUPtotal)
+
+APSDUPnew$Log_dui <- gsub("-Inf", 0, APSDUPnew$Log_dui)
+APSDUPnew$Log_dui <- gsub("NaN", "", APSDUPnew$Log_dui)
+
+APSDUPnew$Log_prodrome <- gsub("-Inf", 0, APSDUPnew$Log_prodrome)
+APSDUPnew$Log_prodrome <- gsub("NaN", "", APSDUPnew$Log_prodrome)
+
+#convert variable back to numeric, because R will treat variable as a string
+
+APSDUPnew$Log_duphelp <- as.numeric(APSDUPnew$Log_duphelp)
+APSDUPnew$Log_dupref <- as.numeric(APSDUPnew$Log_dupref)
+APSDUPnew$Log_dup_en_m <- as.numeric(APSDUPnew$Log_dup_en_m)
+APSDUPnew$Log_DUPtotal <- as.numeric(APSDUPnew$Log_DUPtotal)
+APSDUPnew$Log_dui <- as.numeric(APSDUPnew$Log_dui)
+APSDUPnew$Log_prodrome <- as.numeric(APSDUPnew$Log_prodrome)
+
+#run summaries to make sure this worked.
+
+summary(APSDUPnew$Log_duphelp)
