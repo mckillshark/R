@@ -24,7 +24,7 @@ describe(stress)
 
 #If you want to split your descriptives based on group (using the psych package)
 
-describe.by(stress, stress$Sex.f)
+describeBy(stress, stress$Sex.f)
 
 #Counting frequency for categorical variables
 
