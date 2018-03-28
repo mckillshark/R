@@ -216,3 +216,61 @@ sample estimates:
 mean in group yes  mean in group no 
          2.088782          2.258924 
 
+#######Results of non-parametric test #####################
+
+> A <- APSDUPnew$APSyn
+> y <- APSDUPnew$dup_help
+> wilcox.test(y~A)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  y by A
+W = 13564, p-value = 0.005859
+alternative hypothesis: true location shift is not equal to 0
+
+> y <- APSDUPnew$dup_ref
+> wilcox.test(y~A)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  y by A
+W = 16018, p-value = 0.8696
+alternative hypothesis: true location shift is not equal to 0
+
+> y <- APSDUPnew$dup_en_m
+> wilcox.test(y~A)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  y by A
+W = 14798, p-value = 0.3721
+alternative hypothesis: true location shift is not equal to 0
+
+> y <- APSDUPnew$DUPtotal
+> wilcox.test(y~A)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  y by A
+W = 13950, p-value = 0.08013
+alternative hypothesis: true location shift is not equal to 0
+
+> y <- APSDUPnew$prodrome
+> wilcox.test(y~A)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  y by A
+W = 13142, p-value = 0.003138
+alternative hypothesis: true location shift is not equal to 0
+
+> y <- APSDUPnew$dui
+Warning message:
+Unknown or uninitialised column: 'wilcox.test'. 
+> wilcox.test(y~A)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  y by A
+W = 13206, p-value = 0.04638
+alternative hypothesis: true location shift is not equal to 0
