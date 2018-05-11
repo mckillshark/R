@@ -307,5 +307,6 @@ ggplot(APSDUPnew, aes(x=APSDUPnew$APSyn, y=APSDUPnew$dup_help, fill=APSDUPnew$AP
   geom_errorbar(aes(ymin=APSDUPnew$dup_help-se(APSDUPnew$dup_help), ymax=APSDUPnew$dup_help+se(APSDUPnew$dup_help)), width=.2, stat="summary", position=position_dodge(.9))
   
   # Now you have error bars like a fucking pro
+  # Do the same for all results then you can have a fucking baller bar graph figure
   
-  
+  # You can make things complicated and have R calculate the standard error for you, or you can 
