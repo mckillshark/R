@@ -111,6 +111,27 @@ helpful link for non-parametric tests:
 
 https://www.statmethods.net/stats/nonparametric.html
 
+#difference in proportion (z test)
+
+prop.test(x = c(number with characteristic in pop A, """"""" in pop B), n = c(total popA, total popB)
+
+# example
+
+prop.test(x = c(14, 31), n = c(22, 39))
+
+#result:
+
+2-sample test for equality of proportions with
+	continuity correction
+
+data:  c(14, 31) out of c(22, 39)
+X-squared = 1.099, df = 1, p-value = 0.2945
+alternative hypothesis: two.sided
+95 percent confidence interval:
+ -0.4316824  0.1146661
+sample estimates:
+   prop 1    prop 2 
+0.6363636 0.7948718 
 
 
 
