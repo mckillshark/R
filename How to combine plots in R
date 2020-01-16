@@ -1,0 +1,52 @@
+# Code for putting multiple graphs (in this case, barplots) into one figure-----
+
+# Reference: http://www.sthda.com/english/articles/24-ggpubr-publication-ready-plots/81-ggplot2-easy-way-to-mix-multiple-graphs-on-the-same-page/
++---------+
+| Graph 1:|
++---------+
+# Data frame that contains values I want to plot. In this case, I have 2 groups and I want to plot
+# the medians and their confidence intervals (variables upper and lower):
+
+df1 <- data.frame(group= c("Group1","Group2"), median = c(y,y),
+                      lower = c(y,y), upper = c(y,y))
+
+# GGplot for bar graph:
+
+graph1 <- ggplot(data=df1, aes(x=group, y=median, fill=group)) +
+  geom_bar(data=df1, mapping=aes(x=group, y=median), stat = "identity", width =.5, color = "black") +
+  geom_errorbar(data = df1, mapping=aes(x=group, ymin=upper, ymax=lower), color = "black", width = .2) +
+  theme_bw() ; graph1
+
++---------+
+| Graph 2:|
++---------+
+df2 <- data.frame(group= c("Group1","Group2"), median = c(y,y),
+                      lower = c(y,y), upper = c(y,y))
+
+graph2 <- ggplot(data=df1, aes(x=group, y=median, fill=group)) +
+  geom_bar(data=df2, mapping=aes(x=group, y=median), stat = "identity", width =.5, color = "black") +
+  geom_errorbar(data = df2, mapping=aes(x=group, ymin=upper, ymax=lower), color = "black", width = .2) +
+  theme_bw() ; graph2
+  
++---------+
+| Graph 3:|
++---------+
+df3 <- data.frame(group= c("Group1","Group2"), median = c(y,y),
+                      lower = c(y,y), upper = c(y,y))
+
+graph3 <- ggplot(data=df3, aes(x=group, y=median, fill=group)) +
+  geom_bar(data=df3, mapping=aes(x=group, y=median), stat = "identity", width =.5, color = "black") +
+  geom_errorbar(data = df3, mapping=aes(x=group, ymin=upper, ymax=lower), color = "black", width = .2) +
+  theme_bw() ; graph3
+  
+ # The three plots fell in love because they are so beautiful. So they decide to have a wonderful polyamorous relationship
+ # BUT! They live in separate worlds. Let's bring them together so that they can finally do the dirty:
+ 
+ install.packages("ggpubr")
+ library(ggpubr)
+ 
+ # I have no idea what rremove() does, but it didn't matter if it was there or not so there you go. 
+ 
+ggarrange(graph1, graph2, graph3 + rremove("x.text"),
+          labels = c("A","B","C"),
+          ncol = 2, nrow = 2, align = "v") # align = "v" aligns the graphs' axes vertically
