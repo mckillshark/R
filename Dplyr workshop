@@ -1,0 +1,52 @@
+# Dplyr workshop
+library(dplyr)
+# select - subset columns of df
+# filter - extract subset of rows
+# arrange: reorder rows
+# rename
+# mutate - add new vars/columns or transform exisiting variables
+# summarise/summarize
+# group_by: split df according to a variable
+
+# dim() - givens dimensions
+# str() - structure of data
+
+births_2007_2018 <- readRDS("~/Dplyr/births_2007_2018.rds")
+births_2003_2006 <- readRDS("~/Dplyr/births_2003_2006.rds")
+
+names(births_2003_2006)
+names(births_2007_2018)
+
+# Bind the two datasets
+
+births <- bind_rows(births_2003_2006,births_2007_2018)
+dim(births)
+
+# Remove the column "Notes"
+
+births <-  select(births, -Notes)
+head(births)
+
+# Remove all obs where Average.LMP.Gestional.Age has missing values
+
+births <- filter(births, !is.na(Average.LMP.Gestational.Age))
+summary(births$Average.LMP.Gestational.Age)
+
+# Calculate average birth weight by state using mutate and summarise. How are the results different?
+
+births %>% group_by(State) %>% mutate(stateavg = mean(Average.Birth.Weight), na.rm = T) %>% head(2)
+
+births %>% group_by(State) %>% summarise(stateavg = mean(Average.Birth.Weight), na.rm = T) %>% head(10)
+
+births %>% group_by(State) %>% mutate(stateavg = mean(Average.Birth.Weight), na.rm = T) %>% summarise(statemean = mean(stateavg))
+
+# States with the 5 highest fertility rates in 2010
+
+# Select for 2010
+# Arrange by fertility rate
+
+births %>% filter(Year == 2010) %>%
+  group_by(State) %>%
+  summarise(avgfertility = mean(Fertility.Rate)) %>%
+  arrange(desc(avgfertility)) %>%
+  top_n(5)
