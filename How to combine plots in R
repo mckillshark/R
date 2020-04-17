@@ -50,3 +50,13 @@ graph3 <- ggplot(data=df3, aes(x=group, y=median, fill=group)) +
 ggarrange(graph1, graph2, graph3 + rremove("x.text"),
           labels = c("A","B","C"),
           ncol = 2, nrow = 2, align = "v") # align = "v" aligns the graphs' axes vertically
+          
+          
+ ##### This is a graph to compare two regresion lines. Useless shit I needed for EPIB 705 that took me forever to find:
+ 
+ plot <- ggplot(data=q2data, aes(x = agediag, y = weight)) +
+  geom_point(shape = 1, color = "grey") +
+  geom_abline(intercept = reg$coefficients[1], slope = reg$coefficients[2], show.legend = TRUE, color = "#0000FF", size = 1) +
+  geom_abline(intercept = reg2$coefficients[1], slope = reg2$coefficients[2], show.legend = TRUE, color = "#FF0000", size = 1) +
+  labs(y = "Weight", x = "Agediag (blue) and Agebias (red)") +
+  theme_classic(); plot
