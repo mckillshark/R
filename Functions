@@ -1,0 +1,21 @@
+# Possibly useful code template for functions:
+
+cdetest <- function(data, i) {
+  data1 <- data[i,]
+  mod.out1 <- lm(salary~NoMajorGrant + rank + NoMajorGrant*rank + age, data=data1)
+  mod.med1 <- glm(rank~NoMajorGrant + age, data = data1, family = binomial(link="logit"))
+  theta0 <- mod.out1$coefficients[1]
+  theta1 <- mod.out1$coefficients[2]
+  theta2 <- mod.out1$coefficients[3]
+  theta3 <- mod.out1$coefficients[5]
+  theta4 <- mod.out1$coefficients[4]
+  beta0 <- mod.med1$coefficients[1]
+  beta1 <- mod.med1$coefficients[2]
+  beta3 <- mod.med1$coefficients[3]
+  CDE1 <- theta1 + (theta3*1)
+  CDE2 <- theta1 + (theta3*0)
+  cde.list <- list(CDE1,CDE2)
+  return(cde.list)
+}
+
+# the list function here is useful because it allows you to return more than one value from the function!
