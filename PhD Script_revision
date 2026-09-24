@@ -1,0 +1,146 @@
+*PhD Script*
+library(readr)
+library(dplyr)
+library(rjags)
+
+## Variable formatting
+epi$contact_type3 <- as.factor(epi$contact_type3)
+epi$id <- as.factor(epi$id)
+epi$age_c <- scale(epi$age) # use continuous variable, centred
+epi$sex <- as.factor(epi$sex) # for subgroup analysis
+epi$income <- as.factor(epi$income)
+epi$prior_substance <- as.factor(epi$prior_substance)
+
+## Maybe subgroup by rural as well?
+
+## Sex
+epi <- epi %>%
+	group_by(id) %>%
+	mutate(sex = ifelse(is.na(sex), sex[which(!is.na(sex))[1]],sex)) %>%
+	ungroup()
+epi$sex <- as.factor(epi$sex)
+
+## Income
+epi <- epi %>%
+	group_by(id) %>%
+	mutate(income = ifelse(is.na(income), 
+	income[which(!is.na(income))[1]],income)) %>%
+	ungroup()
+epi$income <- as.factor(epi$income)
+
+epi$income[epi$income=="6"] <- "3"
+epi$income <- droplevels(epi$income)
+summary(epi$income)
+## Collapse income variable
+epi_test <- epi
+epi_test$income2 <- ifelse(epi_test$income == "1"| epi_test$income == "2", "1",
+			ifelse(epi_test$income == "3", "2",
+			ifelse(epi_test$income == "4" | epi_test$income == "5",
+			"3", epi$income)))
+epi_test$income2 <- as.factor(epi_test$income2)
+
+## Prior alcohol
+epi <- epi %>%
+	group_by(id) %>%
+	mutate(prior_alcohol = ifelse(is.na(prior_alcohol), 
+	prior_alcohol[which(!is.na(prior_alcohol))[1]],prior_alcohol)) %>%
+	ungroup()
+epi$prior_alcohol <- as.factor(epi$prior_alcohol)
+
+## Prior substance
+epi <- epi %>%
+	group_by(id) %>%
+	mutate(prior_substance = ifelse(is.na(prior_substance), 
+	prior_substance[which(!is.na(prior_substance))[1]],prior_substance)) %>%
+	ungroup()
+epi$prior_substance <- as.factor(epi$prior_substance)
+
+### Combining AUD and SUD
+epi_test$sud2 <- ifelse(epi_test$prior_alcohol == "2" | epi_test$prior_substance == "2", "1", "0")
+epi_test$sud2 <- as.factor(epi_test$sud2)
+summary(epi_test$sud2)
+
+### Combining ED and hospital visits
+epi_test$contact_type4 <- ifelse(epi_test$contact_type3 == "4" | epi_test$contact_type3 == "5", "4", epi_test$contact_type3)
+epi <- epi_test
+
+data = list(N=N, Y=Y, age=age, year=year,T=Tyear, I=I, id=id)
+model_string <- textConnection("model{
+
+# Likelihood:
+for (i in 1:N){
+mu[i] <- delta[id[i]] + beta1*age_c[i] + beta3[income[i]] + beta4*substance[i]
+p[i,1] <- 1/(1+exp(-c[1,year[i]] + mu[i])) # reference
+p[i,2] <- 1/(1+exp(-c[2,year[i]] + mu[i])) - 1/(1+exp(-c[1,year[i]] + mu[i]))
+p[i,3] <- 1/(1+exp(-c[3.year[i]] + mu[i])) - 1/(1+exp(-c[2,year[i]] + mu[i]))
+p[i,4] <- 1 - 1/(1+exp(-c[3,year[i]] + mu[i]))
+Y[i] ~ dcat(p[i,1:4]) }
+
+# Overall yearly effect
+
+gamma[1] ~ dnorm(0,1)
+for(t in 2:T) {
+gamma[t] ~ dnorm(gamma[(t-1)],tau)
+}
+
+# Cutting point specifications
+for (t in 1:T){
+alpha[1,t] ~ dnorm(gamma[t],iWt)
+alpha[2,t] ~ dlnorm(0,iW)
+alpha[3,t] ~ dlnorm(0,iW)
+c[1,t] <- alpha[1,t]
+c[2,t] <- alpha[1,t] + alpha[2,t]
+c[3,t] <- alpha[1,t] + alpha[2,t] + alpha[3,t]
+
+}
+
+# Prior for delta
+# for loop for the prior on delta that runs from 1:728, same precision as gamma
+
+for(i in 1:I){
+delta[i] ~ dnorm(0,tau)}
+
+# prior for the standard deviation of alpha[1]
+sigma ~ dnorm(0,1)T(0,)
+tau <- 1/pow(sigma,2)
+
+# assigning prior to the standard deviation of alphas 2, 3, 4
+W ~dnorm(0,1)T(0,)
+iW~ 1/pow(W,2)
+Wt ~ dnorm(0,1)T(0,)
+iWt <- 1/pow(Wt,2)
+
+# Prior specifications for the fixed effects
+
+beta1 ~ dnorm(0,1)
+
+beta3[1] <- 0
+beta3[2] <- dnorm(0,1)
+beta3[3] <- dnorm(0,1)
+
+beta4 ~ dnorm(0,1)
+
+# cumulative OR
+
+cOR1 <- exp(beta1)
+
+cOR3[1] <- exp(beta3[1])
+cOR3[2] <- exp(beta3[2])
+cOR3[3] <- exp(beta3[3])
+
+cOR4 <- exp(beta4)
+
+}")
+
+model_jags <- (model_string, data=data, n.chain=3)
+
+update(model_jags, n.iter=20000) # burn in
+
+epi_results_full <- coda.samples(epi_model_full, variable.names=
+  c("beta1","beta3","beta4","delta","gamma","alpha","c",
+  "cOR1","cOR2","cOR3","cOR4"), n.iter=55000, thin=10)
+
+
+results <- coda.samples(model_jags, variable.names=c("beta1", "beta2","beta3","beta4",
+"delta","gamma","alpha","c',
+"cOR1","cOR2","cOR3","cOR4"), n.iter=55000, thin=10)
